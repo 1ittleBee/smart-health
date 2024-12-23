@@ -48,17 +48,16 @@ function ContractInteractionDoctor() {
     try {
       const response = await axios.get(
         `https://gateway.pinata.cloud/ipfs/${recordCid}`,
-        {
-          responseType: "blob",
-        }
+        { responseType: "blob" }
       );
-
       const fileBlob = response.data;
       const fileURL = URL.createObjectURL(fileBlob);
-
       setUrlMap((prevMap) => ({ ...prevMap, [recordCid]: fileURL }));
     } catch (error) {
       console.error("Failed to retrieve file from Pinata:", error);
+      alert(
+        "Failed to retrieve the record. Please check your network settings or try a different gateway."
+      );
     }
   };
 
@@ -93,14 +92,10 @@ function ContractInteractionDoctor() {
                 <strong className="text-yellow-500">Doctor Name:</strong>{" "}
                 {record.doctorName}
                 <br />
-                <strong className="text-yellow-500">
-                  Doctor Address:
-                </strong>{" "}
+                <strong className="text-yellow-500">Doctor Address:</strong>{" "}
                 {record.doctorAddress}
                 <br />
-                <strong className="text-yellow-500">
-                  Patient Address:
-                </strong>{" "}
+                <strong className="text-yellow-500">Patient Address:</strong>{" "}
                 {record.patientAddress}
                 <br />
                 <strong className="text-yellow-500">Age:</strong> {record.age}
