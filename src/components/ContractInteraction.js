@@ -107,24 +107,12 @@ function ContractInteraction() {
                 <strong className="text-yellow-500">Gender:</strong>{" "}
                 {record.gender}
                 <br />
-                <div className="medical-record-details">
-                  {record ? (
-                    <>
-                      <strong className="text-yellow-500">Diagnosis:</strong>{" "}
-                      {record.diagnosis || "No diagnosis available"}
-                      <br />
-                      <strong className="text-yellow-500">
-                        Prescription:
-                      </strong>{" "}
-                      {record.prescription || "No prescription available"}
-                      <br />
-                    </>
-                  ) : (
-                    <div className="text-gray-500">
-                      No medical record available
-                    </div>
-                  )}
-                </div>
+                <strong className="text-yellow-500">Diagnosis:</strong>{" "}
+                {record.diagnosis}
+                <br />
+                <strong className="text-yellow-500">Prescription:</strong>{" "}
+                {record.prescription}
+                <br />
               </div>
 
               {/* PDF Viewer */}
