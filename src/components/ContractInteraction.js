@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Web3 from "web3";
-import record from "../build/contracts/record2.json"; // Replace with the correct path to your ABI JSON
+import record from "../build/contracts/record2.json"; // Make sure this is the right contract
 import { useNavigate, useParams } from "react-router-dom";
 import "../CSS/ContractInteraction.css";
 import axios from "axios";
@@ -17,22 +17,35 @@ function ContractInteraction() {
       if (typeof window.ethereum !== "undefined") {
         const web3 = new Web3(window.ethereum);
         try {
-          await window.ethereum.enable();
+          await window.ethereum.request({ method: "eth_requestAccounts" });
+
           const networkId = await web3.eth.net.getId();
           const deployedNetwork = record.networks[networkId];
+
+          if (!deployedNetwork) {
+            console.error("Contract not deployed to detected network");
+            return;
+          }
+
           const contractAddress = deployedNetwork.address;
           const recordContract = new web3.eth.Contract(
             record.abi,
             contractAddress
           );
 
+          // Log the address being used to call getRecords
+          console.log("Fetching records for address:", address);
+
           const fetchedRecords = await recordContract.methods
             .getRecords()
             .call({ from: address });
 
+          // Log the fetched records to debug
+          console.log("Fetched records:", fetchedRecords);
+
           setRecords(fetchedRecords);
         } catch (error) {
-          console.error("Error:", error);
+          console.error("Error fetching records:", error);
         }
       } else {
         console.error("Please install MetaMask extension.");
@@ -108,11 +121,21 @@ function ContractInteraction() {
                 {record.gender}
                 <br />
                 <strong className="text-yellow-500">Diagnosis:</strong>{" "}
-                {record.diagnosis}
+                {record.diagnosis
+                  ? record.diagnosis
+                  : "(No diagnosis recorded)"}
                 <br />
                 <strong className="text-yellow-500">Prescription:</strong>{" "}
-                {record.prescription}
+                {record.prescription
+                  ? record.prescription
+                  : "(No prescription recorded)"}
                 <br />
+                {/* For debugging */}
+                {process.env.NODE_ENV === "development" && (
+                  <div className="text-xs mt-2 text-gray-300">
+                    Debug - Full record: {JSON.stringify(record, null, 2)}
+                  </div>
+                )}
               </div>
 
               {/* PDF Viewer */}
